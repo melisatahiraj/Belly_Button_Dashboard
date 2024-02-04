@@ -160,7 +160,7 @@ function gaugeChart(dataValue) {
     type: "indicator",
     mode: "gauge+number",
     gauge: {
-      axis: {range: [null, 9]},
+      axis: {range: [0, 9]},
       steps: [
         { range: [0, 1], color: "rgb(248, 243, 236)" },
         { range: [1, 2], color: "rgb(244, 241, 229)" },
