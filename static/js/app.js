@@ -4,32 +4,36 @@ const url =
 let samples;
 let metaData;
 
+
+// Initialize the dashboard
 function init() {
 
-  // Populate the dropdown menu
+  // Use d3 to select the dropdown menu
   let dropdown = d3.select("#selDataset");
   console.log(dropdown);
+
 
   d3.json(url).then((data) => {
     console.log(data);
 
+    // Set variable for names
     let names = data.names;
     console.log("names", names);
 
+    // Loop through the names array
     for (let i = 0; i < names.length; i++) {
       dropdown.append("option").text(names[i]).property("value", names[i]);
     }
 
-    let nameValues = names[0];
-    console.log("name values", nameValues);
-
+    // Set variable for samples
     samples = data.samples;
     console.log("samples", samples);
 
+    // Set variable for metadata
     metaData = data.metadata;
     console.log("meta_data", metaData);
 
-
+    // Call the inital functions to display the charts (added graphBreak web visualizations)
     barChart(samples[0]);
     addGraphBreak();
 
@@ -44,8 +48,10 @@ function init() {
 }
 
 
+// Create barChart function 
 function barChart(dataValues) {
 
+  // Get values from dataValues object
   let otu_ids = dataValues.otu_ids;
   console.log("otu_ids", otu_ids);
 
@@ -55,7 +61,7 @@ function barChart(dataValues) {
   let sampleValues = dataValues.sample_values;
   console.log("sampleValues", sampleValues);
 
-  //
+  // Slice the top 10 objects for plotting and assign to variables
   let xticks = sampleValues.slice(0, 10).reverse();
   console.log("xticks", xticks);
 
@@ -65,7 +71,7 @@ function barChart(dataValues) {
   let text = otu_labels.slice(0, 10).reverse();
   console.log("text", text);
 
-  //
+  // Create trace1 for the bar chart
   let trace1 = {
     x: xticks,
     y: yticks,
@@ -76,6 +82,7 @@ function barChart(dataValues) {
 
   let barData = [trace1];
 
+  // Create layout for the bar chart
   let barLayout = {
     title: "<b>Top 10 OTUs</b>",
     margin: {
@@ -88,12 +95,15 @@ function barChart(dataValues) {
     width: 400,
   };
 
+  // Plot the bar chart
   Plotly.newPlot("bar", barData, barLayout);
 }
 
 
+// Create bubbleChart function
 function bubbleChart(dataValues) {
 
+  // Get values from dataValues object
   let otu_ids = dataValues.otu_ids;
   console.log("otu_ids", otu_ids);
 
@@ -103,7 +113,7 @@ function bubbleChart(dataValues) {
   let sampleValues = dataValues.sample_values;
   console.log("sampleValues", sampleValues);
 
-  //
+  //  Assign values to variables
   let xticks = otu_ids;
   console.log("xticks", xticks);
 
@@ -119,7 +129,7 @@ function bubbleChart(dataValues) {
   let text = otu_labels;
   console.log("text", text);
 
-  //
+  // Create trace2 for the bubble chart
   let trace2 = {
     x: xticks,
     y: yticks,
@@ -134,6 +144,7 @@ function bubbleChart(dataValues) {
 
   let bubbleData = [trace2];
 
+  // Create layout for the bubble chart
   let bubbleLayout = {
     title: "<b>OTU IDs</b>",
     margin: {
@@ -146,13 +157,15 @@ function bubbleChart(dataValues) {
     width: 1500,
   };
 
+  // Plot the bubble chart
   Plotly.newPlot("bubble", bubbleData, bubbleLayout);
-
 }
 
 
+// Create gaugeChart function
 function gaugeChart(dataValue) {
 
+  // Create trace3 for the gauge chart
   let trace3 = {
     domain: {x: [0, 1], y: [0, 1]},
     value: dataValue.wfreq,
@@ -177,6 +190,7 @@ function gaugeChart(dataValue) {
 
   let gaugeData = [trace3];
 
+  // Create layout for the gauge chart
   let gaugeLayout = {
     height: 500,
     width: 400,
@@ -186,14 +200,18 @@ function gaugeChart(dataValue) {
     }
   };
 
+  // Plot the gauge chart
   Plotly.newPlot("gauge", gaugeData, gaugeLayout);
 }
 
 
+// Create metaChart function
 function metaChart(dataValue) {
 
+  // Use d3 to select the metadata to display in the Dashboard Info
   d3.select("#sample-metadata").html("");
 
+  // Loop through the key, value pairs in dataValue object
   for (let [key, value] of Object.entries(dataValue)) {
     console.log(key, value);
 
@@ -202,12 +220,15 @@ function metaChart(dataValue) {
 }
 
 
+// Create optionChanged function
 function optionChanged(dataValue) {
   console.log('optionChanged', dataValue);
 
+  // Filter the data based on the selected value
   let filteredData = samples.filter((sample) => sample.id == dataValue);
   let filteredMeta = metaData.filter((meta) => meta.id == dataValue);
 
+  // Call the functions to display the charts
   metaChart(filteredMeta[0]);
   barChart(filteredData[0]);
   bubbleChart(filteredData[0]);
@@ -215,10 +236,12 @@ function optionChanged(dataValue) {
 }
 
 
+// Create addGraphBreak function
 function addGraphBreak() {
   d3.select("#bar").append("br");
   d3.select("#bubble").append("br");
   d3.select("#gauge").append("br");
 }
+
 
 init();
