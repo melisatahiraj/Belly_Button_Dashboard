@@ -1,4 +1,4 @@
-# belly-button-challenge-14
+# Belly Button Biodiversity Dashboard
 
 ![microbes-sem](https://github.com/melisatahiraj/belly-button-challenge-14/assets/147450801/138ca8b4-4c84-4b6a-a76c-a41b92428d86)
 
